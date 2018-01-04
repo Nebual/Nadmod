@@ -6,7 +6,7 @@
 if !NADMOD then
 	-- Stuff in here will only ever be run once per serverload
 	NADMOD = util.JSONToTable(file.Read("nadmod_config.txt","DATA") or "") or {Users = {}, Groups = {}, Bans = {}, PPConfig = {}}
-	NADMOD.Version = "1.2"
+	NADMOD.Version = "1.2.1"
 
 	concommand.Add("nadmod_reload", function(ply,cmd,args)
 		if args[1] == "full" then NADMOD = nil end
@@ -41,7 +41,7 @@ if !NADMOD then
 		NADMOD.Groups[25] = {
 			Name="Admin",
 			Color=Color(200,10,10),
-			Permissions = {"Communications","Teleport","SetRank","Cheats","Admin_Status","Annoys","KickBan","MapChange","Weapons","TeleportOthers","PP_All","CanDealDamage"},
+			Permissions = {"Communications","Teleport","SetRank","Cheats","SuperAdmin_Status","Admin_Status","Annoys","KickBan","MapChange","Weapons","TeleportOthers","PP_All","CanDealDamage"},
 			Loadout = {"GravGun","PhysGun","ToolGun","Camera","AR2","Crowbar"},
 		}
 	end
@@ -316,6 +316,7 @@ NADMOD.Permissions = {
 	SetRank = {
 		setrank = function(ply,args) NADMOD.SetRank(args[1],args[2],ply) end,
 	},
+	SuperAdmin_Status = {}, -- Just to give out IsSuperAdmin
 	Admin_Status = { -- This is mostly just to give out Gmod's builtin IsAdmin status
 		menu = function(ply,args) ply:ConCommand("nadmod_open") end,
 	},
@@ -719,6 +720,9 @@ function NADMOD.RefreshRanks(ply)
 		if NADMOD.HasPermission(ply, "Admin_Status") then
 			ply:SetUserGroup("admin") -- Tell Gmod he's an admin so ply:IsAdmin works
 		end
+		if NADMOD.HasPermission(ply, "SuperAdmin_Status") then
+			ply:SetUserGroup("superadmin") -- Tell Gmod he's a superadmin so ply:IsSuperAdmin works
+		end
 	end
 end
 function NADMOD.RefreshPlayer(ply)
@@ -871,6 +875,7 @@ concommand.Add("nadmod_menu", function(ply,cmd,args)
 			perms[k] = contents
 		end
 	end
+	perms.SuperAdmin_Status = "SuperAdmin Status"
 	perms.PP_All = "Prop Protection Override"
 	perms.NoclipAlways = "Ignore sbox_noclip=0"
 	perms.CanDealDamage = "Hurt Players"
