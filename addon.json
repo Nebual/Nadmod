@@ -1,0 +1,13 @@
+{
+	"title"		:	"Nadmod",
+	"type"		:	"tool",
+	"tags"		:	[ "fun", "build" ],
+	"description":	"Nebual's simple chat command based admin mod",
+	"ignore"	:
+	[
+		".git*",
+		".gitignore",
+		"license",
+		"readme.md"
+	]
+}
